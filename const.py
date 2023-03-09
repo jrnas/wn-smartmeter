@@ -1,6 +1,6 @@
-"""
-    api constants
-"""
+"""Constants for WienerNetze."""
+from datetime import timedelta
+from typing import Final
 import re
 
 API_GATEWAY_TOKEN_REGEX = re.compile(
@@ -23,6 +23,8 @@ LOGIN_ARGS = {
     "nonce": "",
 }
 
+API_TIMEOUT = 30
+
 
 def build_access_token_args(**kwargs):
     """
@@ -35,3 +37,16 @@ def build_access_token_args(**kwargs):
     }
     args.update(**kwargs)
     return args
+
+
+# config
+DOMAIN = "wnsm"
+TIMEZONE = "Europe/Vienna"
+CONF_USERNAME: Final = "username"
+CONF_PASSWORD: Final = "password"
+CONF_ZAEHLERPUNKT: Final = "zaehlerpunkt"
+CONF_SCAN_INTERVAL: Final = "scan_interval"
+
+ATTR_ZAEHLERPUNKT: Final = "MeterReader"
+ATTR_CONSUMPTION_YESTERDAY: Final = "ConsumptionYesterday"
+ATTR_CONSUMPTION_DAY_BEFORE_YESTERDAY: Final = "ConsumptionDayBeforeYesterday"

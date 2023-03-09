@@ -1,8 +1,9 @@
 {
-    "domain": "wiener_netze",
-    "name": "WienerNetze Sensor",
+    "domain": "wnsm",
+    "name": "Wiener Netze Smartmeter",
     "documentation": "https://github.com/home-assistant/example-custom-config/tree/master/custom_components/example_sensor/",
     "dependencies": [],
+    "config_flow": true,
     "codeowners": [],
     "requirements": [
       "lxml"

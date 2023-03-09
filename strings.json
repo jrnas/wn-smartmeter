@@ -1,0 +1,16 @@
+{
+  "options": {
+    "step": {
+      "init": {
+        "data": {
+          "zaehlerpunkt": "asd1",
+          "scan_interval": "asd2"
+        },
+        "data_description": {
+          "zaehlerpunkt": "dd1",
+          "scan_interval": "asd2"
+        }
+      }
+    }
+  }
+}

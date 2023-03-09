@@ -17,7 +17,7 @@ from homeassistant.helpers.typing import StateType
 
 from .coordinator import WienerNetzeUpdateCoordinator
 from .entity import WienerNetzeEntity
-from .custom_components.wnsm.const import (
+from .const import (
     DOMAIN,
     ATTR_ZAEHLERPUNKT,
     ATTR_CONSUMPTION_YESTERDAY,

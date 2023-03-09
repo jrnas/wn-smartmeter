@@ -16,6 +16,7 @@ from homeassistant.config_entries import (
 
 from .const import (
     DOMAIN,
+    NAME,
     CONF_USERNAME,
     CONF_PASSWORD,
     CONF_ZAEHLERPUNKT,
@@ -52,10 +53,9 @@ class WienerNetzeFlowHandler(ConfigFlow, domain=DOMAIN):
             _LOGGER.debug("Testing of credentials returned: ")
             _LOGGER.debug(valid)
             if valid:
-                return self.async_create_entry(
-                    title="Wiener Netze Smartmeter", data=user_input
-                )
+                return self.async_create_entry(title=NAME, data=user_input)
 
+            self._errors["base"] = "auth"
             return await self._show_config_form(user_input)
 
         return await self._show_config_form(user_input)

@@ -41,6 +41,7 @@ def build_access_token_args(**kwargs):
 
 # config
 DOMAIN = "wnsm"
+NAME = "Wiener Netze Smartmeter"
 TIMEZONE = "Europe/Vienna"
 CONF_USERNAME: Final = "username"
 CONF_PASSWORD: Final = "password"

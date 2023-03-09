@@ -11,7 +11,7 @@ from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 from homeassistant.helpers.entity import Entity
 from homeassistant.config_entries import ConfigEntry
 
-from .custom_components.wnsm.const import (
+from .const import (
     DOMAIN,
     CONF_USERNAME,
     CONF_PASSWORD,

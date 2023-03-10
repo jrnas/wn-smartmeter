@@ -18,6 +18,7 @@ from datetime import datetime, timedelta
 from homeassistant.helpers.aiohttp_client import (
     async_create_clientsession,
 )
+from homeassistant.core import HomeAssistant
 
 _LOGGER = logging.getLogger(__name__)
 timeout = aiohttp.ClientTimeout(total=API_TIMEOUT)
@@ -26,13 +27,20 @@ timeout = aiohttp.ClientTimeout(total=API_TIMEOUT)
 class WienerNetzeAPI:
     """WienerNetze API Client."""
 
-    def __init__(self, hass, username: str, password: str, zaehlerpunkt: str) -> None:
+    def __init__(
+        self,
+        hass: HomeAssistant,
+        username: str,
+        password: str,
+        zaehlerpunkt: str,
+    ) -> None:
         """Access the Smartmeter API."""
         self.hass = hass
         self.username = username
         self.password = password
         self.zaehlerpunkt = zaehlerpunkt
-        self.session = async_create_clientsession(hass, verify_ssl=False)
+        self.session = None
+        self.lastlogin = None
         self._access_token = None
         self._refresh_token = None
         self._api_gateway_token = None
@@ -75,6 +83,8 @@ class WienerNetzeAPI:
     async def login(self) -> bool:
         """login"""
         _LOGGER.debug("login()")
+        self.session = async_create_clientsession(self.hass, verify_ssl=False)
+        self.lastlogin = datetime.now()
         action = await self._get_login_url()
 
         if action is not None:
@@ -143,7 +153,17 @@ class WienerNetzeAPI:
     ):
         """call api"""
         _LOGGER.debug("_call_api()")
-        await self.login()
+        # check tokens exist
+        if self._access_token is None or self._api_gateway_token is None:
+            await self.login()
+        else:
+            # check lastlogin if more then 5 minutes then login again
+            now = datetime.now()
+            duration = now - self.lastlogin
+            duration_in_m = divmod(duration.total_seconds(), 60)[0]
+            _LOGGER.debug("minutes since last login: %s", duration_in_m)
+            if duration_in_m > 5:  # last login is 5 minutes ago
+                await self.login()
 
         if base_url is None:
             base_url = API_URL

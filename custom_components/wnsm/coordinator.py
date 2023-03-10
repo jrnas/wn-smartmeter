@@ -44,6 +44,8 @@ class WienerNetzeUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             update_interval=timedelta(minutes=config_entry.data[CONF_SCAN_INTERVAL]),
         )
         _LOGGER.debug("setup")
+        _LOGGER.debug("zaehlerpunkt: %s", self.config_entry.data[CONF_ZAEHLERPUNKT])
+        _LOGGER.debug("scan_interval: %s", self.config_entry.data[CONF_SCAN_INTERVAL])
         self.wienernetze_api = WienerNetzeAPI(
             hass,
             self.config_entry.data[CONF_USERNAME],

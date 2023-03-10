@@ -12,7 +12,7 @@
             }
         },
         "error": {
-            "auth": "Ein Fehler ist aufgetreten"
+            "auth": "Username oder Passwort falsch!"
         },
         "abort": {
             "single_instance_allowed": "Nur eine WienerNetze konfiguration ist erlaubt."

@@ -43,6 +43,7 @@ def build_access_token_args(**kwargs):
 DOMAIN = "wnsm"
 NAME = "Wiener Netze Smartmeter"
 TIMEZONE = "Europe/Vienna"
+DEFAULT_SCAN_INTERVAL: Final = 60
 CONF_USERNAME: Final = "username"
 CONF_PASSWORD: Final = "password"
 CONF_ZAEHLERPUNKT: Final = "zaehlerpunkt"

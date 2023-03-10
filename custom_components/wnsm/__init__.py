@@ -1,5 +1,6 @@
 """WienerNetze Sensor custom integration"""
 from __future__ import annotations
+import logging
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
@@ -7,6 +8,9 @@ from homeassistant.core import HomeAssistant
 from .coordinator import WienerNetzeUpdateCoordinator
 
 from .const import DOMAIN
+from .const import CONF_ZAEHLERPUNKT, CONF_SCAN_INTERVAL
+
+_LOGGER = logging.getLogger(__name__)
 
 
 async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry):
@@ -19,7 +23,7 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry):
     hass.data[DOMAIN] = coordinator
 
     await hass.config_entries.async_forward_entry_setups(config_entry, ["sensor"])
-
+    config_entry.async_on_unload(config_entry.add_update_listener(update_listener))
     return True
 
 
@@ -31,3 +35,19 @@ async def async_unload_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> 
         del hass.data[DOMAIN]
 
     return unloaded
+
+
+async def update_listener(hass: HomeAssistant, config_entry: ConfigEntry) -> None:
+    """Update listener."""
+    _LOGGER.debug("update_listener()")
+    if CONF_SCAN_INTERVAL in config_entry.options:
+        new = {**config_entry.data}
+        new[CONF_SCAN_INTERVAL] = config_entry.options[CONF_SCAN_INTERVAL]
+        hass.config_entries.async_update_entry(config_entry, data=new)
+
+    if CONF_ZAEHLERPUNKT in config_entry.options:
+        new = {**config_entry.data}
+        new[CONF_ZAEHLERPUNKT] = config_entry.options[CONF_ZAEHLERPUNKT]
+        hass.config_entries.async_update_entry(config_entry, data=new)
+
+    await hass.config_entries.async_reload(config_entry.entry_id)

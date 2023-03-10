@@ -12,7 +12,7 @@
             }
         },
         "error": {
-            "auth": "Something went wrong."
+            "auth": "Invalid credentials"
         },
         "abort": {
             "single_instance_allowed": "Only a single configuration of WienerNetze is allowed."

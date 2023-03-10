@@ -143,8 +143,7 @@ class WienerNetzeAPI:
     ):
         """call api"""
         _LOGGER.debug("_call_api()")
-        if self._access_token is None or self._api_gateway_token is None:
-            await self.login()
+        await self.login()
 
         if base_url is None:
             base_url = API_URL

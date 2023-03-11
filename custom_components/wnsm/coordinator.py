@@ -66,15 +66,15 @@ class WienerNetzeUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             if response["consumptionYesterday"] is not None:
                 if "value" in response["consumptionDayBeforeYesterday"]:
                     _LOGGER.debug("got consumptionYesterday")
-                    data[ATTR_CONSUMPTION_YESTERDAY] = response["consumptionYesterday"][
+                    data[ATTR_CONSUMPTION_YESTERDAY] = int(response["consumptionYesterday"][
                         "value"
-                    ]
+                    ]) / 1000
             if response["consumptionDayBeforeYesterday"] is not None:
                 if "value" in response["consumptionDayBeforeYesterday"]:
                     _LOGGER.debug("got consumptionDayBeforeYesterday")
-                    data[ATTR_CONSUMPTION_DAY_BEFORE_YESTERDAY] = response[
+                    data[ATTR_CONSUMPTION_DAY_BEFORE_YESTERDAY] = int(response[
                         "consumptionDayBeforeYesterday"
-                    ]["value"]
+                    ]["value"]) / 1000
 
     async def _async_update_data(self) -> dict[str, Any]:
         """Fetch data."""

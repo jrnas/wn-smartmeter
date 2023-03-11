@@ -1,5 +1,4 @@
 """Constants for WienerNetze."""
-from datetime import timedelta
 from typing import Final
 import re
 
@@ -42,7 +41,6 @@ def build_access_token_args(**kwargs):
 # config
 DOMAIN = "wnsm"
 NAME = "Wiener Netze Smartmeter"
-TIMEZONE = "Europe/Vienna"
 DEFAULT_SCAN_INTERVAL: Final = 60
 CONF_USERNAME: Final = "username"
 CONF_PASSWORD: Final = "password"

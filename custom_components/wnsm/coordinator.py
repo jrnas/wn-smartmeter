@@ -2,9 +2,7 @@
 
 import logging
 from typing import Any
-from datetime import timedelta, datetime
-from dateutil.parser import parse
-import pytz
+from datetime import timedelta
 
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
@@ -20,7 +18,6 @@ from .const import (
     ATTR_ZAEHLERPUNKT,
     ATTR_CONSUMPTION_YESTERDAY,
     ATTR_CONSUMPTION_DAY_BEFORE_YESTERDAY,
-    TIMEZONE,
 )
 
 from .api import WienerNetzeAPI
@@ -65,25 +62,19 @@ class WienerNetzeUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         _LOGGER.debug("_update_consumption()")
         response = await self.wienernetze_api.get_consumption()
         _LOGGER.debug(response)
-        if response is not None and hasattr(response, "get"):
-            values = response.get("values")
-            if values:
-                for value in values:
-                    if value is not None:
-                        val = value.get("value") / 1000
-                        timestamp = value.get("timestamp")
-
-                        if val and timestamp:
-                            t_z = pytz.timezone(TIMEZONE)
-                            now = datetime.now(tz=t_z)
-                            yesterday = now - timedelta(days=1)
-                            day_before_yesterday = now - timedelta(days=2)
-
-                            timestamp = parse(timestamp) + timedelta(days=1)
-                            if timestamp.date() == yesterday.date():
-                                data[ATTR_CONSUMPTION_YESTERDAY] = val
-                            if timestamp.date() == day_before_yesterday.date():
-                                data[ATTR_CONSUMPTION_DAY_BEFORE_YESTERDAY] = val
+        if response is not None:
+            if response["consumptionYesterday"] is not None:
+                if "value" in response["consumptionDayBeforeYesterday"]:
+                    _LOGGER.debug("got consumptionYesterday")
+                    data[ATTR_CONSUMPTION_YESTERDAY] = response["consumptionYesterday"][
+                        "value"
+                    ]
+            if response["consumptionDayBeforeYesterday"] is not None:
+                if "value" in response["consumptionDayBeforeYesterday"]:
+                    _LOGGER.debug("got consumptionDayBeforeYesterday")
+                    data[ATTR_CONSUMPTION_DAY_BEFORE_YESTERDAY] = response[
+                        "consumptionDayBeforeYesterday"
+                    ]["value"]
 
     async def _async_update_data(self) -> dict[str, Any]:
         """Fetch data."""

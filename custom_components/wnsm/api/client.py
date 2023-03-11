@@ -14,7 +14,7 @@ import logging
 import aiohttp
 from aiohttp import hdrs
 from lxml import html
-from datetime import datetime, timedelta
+from datetime import datetime
 from homeassistant.helpers.aiohttp_client import (
     async_create_clientsession,
 )
@@ -50,10 +50,20 @@ class WienerNetzeAPI:
         _LOGGER.debug("_get_login_url()")
         login_url = AUTH_URL + "auth?" + parse.urlencode(LOGIN_ARGS)
         _LOGGER.debug(login_url)
+        _LOGGER.debug("request cookies:")
+        for cookie in self.session.cookie_jar:
+            _LOGGER.debug("%s=%s", cookie.key, cookie["domain"])
 
         async with self.session.get(url=login_url, timeout=timeout) as resp:
             status_code = int(resp.status)
+            headers = resp.headers
             body = await resp.text()
+            _LOGGER.debug("response status: %s", resp.status)
+            _LOGGER.debug("response headers:")
+            _LOGGER.debug(headers)
+            _LOGGER.debug("response cookies:")
+            for cookie in self.session.cookie_jar:
+                _LOGGER.debug("%s=%s", cookie.key, cookie["domain"])
 
             if status_code != 200:
                 raise ConnectionError(
@@ -62,7 +72,6 @@ class WienerNetzeAPI:
 
             tree = html.fromstring(body)
             loginurl = tree.xpath("(//form/@action)")
-            _LOGGER.debug(loginurl[0])
 
             return loginurl[0]
 
@@ -85,20 +94,28 @@ class WienerNetzeAPI:
         _LOGGER.debug("login()")
         self.session = async_create_clientsession(self.hass, verify_ssl=False)
         self.lastlogin = datetime.now()
-        action = await self._get_login_url()
+        login_url = await self._get_login_url()
 
-        if action is not None:
-            _LOGGER.debug(action)
+        if login_url is not None:
+            _LOGGER.debug("login_url: %s", login_url)
+            _LOGGER.debug("request cookies:")
+            for cookie in self.session.cookie_jar:
+                _LOGGER.debug("%s=%s", cookie.key, cookie["domain"])
 
             data = {
                 "username": self.username,
                 "password": self.password,
             }
             async with self.session.post(
-                url=action, data=data, allow_redirects=False, timeout=timeout
+                url=login_url, data=data, allow_redirects=False, timeout=timeout
             ) as resp:
                 headers = resp.headers
+                _LOGGER.debug("response status: %s", resp.status)
+                _LOGGER.debug("response headers:")
                 _LOGGER.debug(headers)
+                _LOGGER.debug("response cookies:")
+                for cookie in self.session.cookie_jar:
+                    _LOGGER.debug("%s=%s", cookie.key, cookie["domain"])
 
             if "Location" not in headers:
                 return False
@@ -153,17 +170,7 @@ class WienerNetzeAPI:
     ):
         """call api"""
         _LOGGER.debug("_call_api()")
-        # check tokens exist
-        if self._access_token is None or self._api_gateway_token is None:
-            await self.login()
-        else:
-            # check lastlogin if more then 5 minutes then login again
-            now = datetime.now()
-            duration = now - self.lastlogin
-            duration_in_m = divmod(duration.total_seconds(), 60)[0]
-            _LOGGER.debug("minutes since last login: %s", duration_in_m)
-            if duration_in_m > 5:  # last login is 5 minutes ago
-                await self.login()
+        await self.login()
 
         if base_url is None:
             base_url = API_URL
@@ -190,18 +197,7 @@ class WienerNetzeAPI:
         return await self._call_api("zaehlpunkt/meterReadings")
 
     async def get_consumption(self):
-        """getting verbrauchRaw data from the smartmeter api"""
+        """getting zaehlpunkt consumptions data from the smartmeter api"""
         _LOGGER.debug("get_consumption")
-        endpoint = f"messdaten/zaehlpunkt/{self.zaehlerpunkt}/verbrauchRaw"
-        date_from = datetime.today() - timedelta(days=4)
-        date_to = datetime.today() + timedelta(days=1)
-        query = {
-            "dateFrom": self._dt_string(
-                date_from.replace(hour=23, minute=00, second=0, microsecond=0)
-            ),
-            "dateTo": self._dt_string(
-                date_to.replace(hour=22, minute=59, second=59, microsecond=9)
-            ).replace(".000Z", ".999Z"),
-            "granularity": "DAY",
-        }
-        return await self._call_api(endpoint=endpoint, query=query)
+        endpoint = "zaehlpunkt/consumptions"
+        return await self._call_api(endpoint=endpoint)

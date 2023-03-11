@@ -6,23 +6,28 @@
 .... youre text here :)
 
 ## FAQs
-gibts ned
+not yet!
 
 ## Installation
-selbst schuld
-### Manual
-
-gibts ned
-
 ### HACS
-auch ned
+I recommend installing it through [HACS](https://github.com/hacs/integration)
 
-## Configure
+Installing via HACS
 
-bist du zu blöd?
-
-
+#### 1. Go to HACS->Integrations
+#### 2. Add this repo into your HACS custom repositories
+#### 3. Search for Wiener Netze and Download it
+#### 4. Restart your HomeAssistant
+#### 5. Go to Settings->Devices & Services
+#### 6. Shift reload your browser
+#### 7. Click Add Integration
+#### 8. Search for Wiener Netze
+#### 9. Type your username, password and the meter reader
+## Have fun!
+##
+##
 ## Copyright
+
 
 This integration uses the API of https://www.wienernetze.at/smartmeter
 All rights regarding the API are reserved by [Wiener Netze](https://www.wienernetze.at/impressum)

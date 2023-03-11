@@ -1,0 +1,19 @@
+author:
+    email: jrnas@users.noreply.github.com
+    homepage: https://github.com/jrnas/wiener_netze
+    name: jrnas
+  description: Wiener Netze Smartmeter
+  files:
+    - custom_components/wnsm/__init__.py
+    - custom_components/wnsm/sensor.py
+  keywords:
+    - wnsm
+    - wien
+    - smartmeter
+    - homeassistant
+    - home-assistant
+    - custom-component
+    - python
+  license: MIT License
+  name: wienernetzesmartmeter
+  type: component

@@ -3,11 +3,11 @@
     "step": {
       "init": {
         "data": {
-          "zaehlerpunkt": "asd1",
+          "meter_reader": "asd1",
           "scan_interval": "asd2"
         },
         "data_description": {
-          "zaehlerpunkt": "dd1",
+          "meter_reader": "dd1",
           "scan_interval": "asd2"
         }
       }

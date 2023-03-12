@@ -22,7 +22,7 @@ from .const import (
     NAME,
     CONF_USERNAME,
     CONF_PASSWORD,
-    CONF_ZAEHLERPUNKT,
+    CONF_METER_READER,
     CONF_SCAN_INTERVAL,
     DEFAULT_SCAN_INTERVAL,
 )
@@ -49,7 +49,7 @@ class WienerNetzeFlowHandler(ConfigFlow, domain=DOMAIN):
             valid = await self._test_credentials(
                 user_input[CONF_USERNAME],
                 user_input[CONF_PASSWORD],
-                user_input[CONF_ZAEHLERPUNKT],
+                user_input[CONF_METER_READER],
             )
             _LOGGER.debug("Testing of credentials returned: ")
             _LOGGER.debug(valid)
@@ -71,7 +71,7 @@ class WienerNetzeFlowHandler(ConfigFlow, domain=DOMAIN):
                         default="",
                     ): str,
                     vol.Required(
-                        CONF_ZAEHLERPUNKT,
+                        CONF_METER_READER,
                         default="",
                     ): str,
                     vol.Required(
@@ -82,11 +82,11 @@ class WienerNetzeFlowHandler(ConfigFlow, domain=DOMAIN):
             errors=errors,
         )
 
-    async def _test_credentials(self, username, password, zaehlerpunkt):
+    async def _test_credentials(self, username, password, meter_reader):
         """Return true if credentials is valid."""
         _LOGGER.debug("Testing credentials")
 
-        wienernetze_api = WienerNetzeAPI(self.hass, username, password, zaehlerpunkt)
+        wienernetze_api = WienerNetzeAPI(self.hass, username, password, meter_reader)
         return await wienernetze_api.login()
 
     @staticmethod
@@ -96,8 +96,8 @@ class WienerNetzeFlowHandler(ConfigFlow, domain=DOMAIN):
         options_schema = vol.Schema(
             {
                 vol.Required(
-                    CONF_ZAEHLERPUNKT,
-                    default=config_entry.data.get(CONF_ZAEHLERPUNKT, ""),
+                    CONF_METER_READER,
+                    default=config_entry.data.get(CONF_METER_READER, ""),
                 ): str,
                 vol.Required(CONF_SCAN_INTERVAL, default=DEFAULT_SCAN_INTERVAL): int,
             }

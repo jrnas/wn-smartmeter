@@ -39,14 +39,14 @@ def build_access_token_args(**kwargs):
 
 
 # config
-DOMAIN = "wnsm"
-NAME = "Wiener Netze Smartmeter"
+DOMAIN = "wn-smartmeter"
+NAME = "WN Smartmeter"
 DEFAULT_SCAN_INTERVAL: Final = 60
 CONF_USERNAME: Final = "username"
 CONF_PASSWORD: Final = "password"
-CONF_ZAEHLERPUNKT: Final = "zaehlerpunkt"
+CONF_METER_READER: Final = "meter_reader"
 CONF_SCAN_INTERVAL: Final = "scan_interval"
 
-ATTR_ZAEHLERPUNKT: Final = "MeterReader"
+ATTR_METER_READER: Final = "MeterReader"
 ATTR_CONSUMPTION_YESTERDAY: Final = "ConsumptionYesterday"
 ATTR_CONSUMPTION_DAY_BEFORE_YESTERDAY: Final = "ConsumptionDayBeforeYesterday"

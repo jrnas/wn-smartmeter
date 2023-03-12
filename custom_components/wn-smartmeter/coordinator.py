@@ -13,9 +13,9 @@ from .const import (
     DOMAIN,
     CONF_USERNAME,
     CONF_PASSWORD,
-    CONF_ZAEHLERPUNKT,
+    CONF_METER_READER,
     CONF_SCAN_INTERVAL,
-    ATTR_ZAEHLERPUNKT,
+    ATTR_METER_READER,
     ATTR_CONSUMPTION_YESTERDAY,
     ATTR_CONSUMPTION_DAY_BEFORE_YESTERDAY,
 )
@@ -41,22 +41,22 @@ class WienerNetzeUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             update_interval=timedelta(minutes=config_entry.data[CONF_SCAN_INTERVAL]),
         )
         _LOGGER.debug("setup")
-        _LOGGER.debug("zaehlerpunkt: %s", self.config_entry.data[CONF_ZAEHLERPUNKT])
+        _LOGGER.debug("meter_reader: %s", self.config_entry.data[CONF_METER_READER])
         _LOGGER.debug("scan_interval: %s", self.config_entry.data[CONF_SCAN_INTERVAL])
         self.wienernetze_api = WienerNetzeAPI(
             hass,
             self.config_entry.data[CONF_USERNAME],
             self.config_entry.data[CONF_PASSWORD],
-            self.config_entry.data[CONF_ZAEHLERPUNKT],
+            self.config_entry.data[CONF_METER_READER],
         )
 
         self.entities: list[Entity] = []
 
-    async def _update_zaehlerstand(self, data):
-        _LOGGER.debug("_update_zaehlerstand()")
-        response = await self.wienernetze_api.get_zaehlerstand()
+    async def _update_meterreader(self, data):
+        _LOGGER.debug("_update_meterreader()")
+        response = await self.wienernetze_api.get_meterreader()
         _LOGGER.debug(response)
-        data[ATTR_ZAEHLERPUNKT] = response["meterReadings"][0]["value"] / 1000
+        data[ATTR_METER_READER] = response["meterReadings"][0]["value"] / 1000
 
     async def _update_consumption(self, data):
         _LOGGER.debug("_update_consumption()")
@@ -80,7 +80,7 @@ class WienerNetzeUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         """Fetch data."""
         data: dict[str, Any] = {}
 
-        await self._update_zaehlerstand(data)
+        await self._update_meterreader(data)
         await self._update_consumption(data)
 
         _LOGGER.debug(data)

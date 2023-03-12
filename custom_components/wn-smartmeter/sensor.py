@@ -19,7 +19,7 @@ from .coordinator import WienerNetzeUpdateCoordinator
 from .entity import WienerNetzeEntity
 from .const import (
     DOMAIN,
-    ATTR_ZAEHLERPUNKT,
+    ATTR_METER_READER,
     ATTR_CONSUMPTION_YESTERDAY,
     ATTR_CONSUMPTION_DAY_BEFORE_YESTERDAY,
 )
@@ -54,12 +54,12 @@ class WienerNetzeSensorEntityDescription(SensorEntityDescription):
 
 SENSORS: tuple[WienerNetzeSensorEntityDescription, ...] = (
     WienerNetzeSensorEntityDescription(
-        key=ATTR_ZAEHLERPUNKT,
-        name="WienerNetze Zaehlerstand",
+        key=ATTR_METER_READER,
+        name="WienerNetze MeterReader",
         native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
         state_class=SensorStateClass.TOTAL_INCREASING,
         icon="mdi:flash",
-        exists_fn=lambda entities: ATTR_ZAEHLERPUNKT in entities,
+        exists_fn=lambda entities: ATTR_METER_READER in entities,
     ),
     WienerNetzeSensorEntityDescription(
         key=ATTR_CONSUMPTION_YESTERDAY,

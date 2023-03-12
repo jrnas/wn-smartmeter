@@ -2,11 +2,11 @@
     "config": {
         "step": {
             "user": {
-                "title": "Wiener Netze Smartmeter",
+                "title": "WN Smartmeter",
                 "data": {
                     "username": "Dein Benutzername von LogWien",
                     "password": "Dein Passwort von LogWien",
-                    "zaehlerpunkt": "Deine Zählerpunktnummer (e.g.: AT....)",
+                    "meter_reader": "Deine Zählerpunktnummer (e.g.: AT....)",
                     "scan_interval": "Scan intervall in Minuten (default: 60)"
                 }
             }
@@ -22,7 +22,7 @@
         "step": {
             "init": {
                 "data": {
-                    "zaehlerpunkt": "Deine Zählerpunktnummer (e.g.: AT....)",
+                    "meter_reader": "Deine Zählerpunktnummer (e.g.: AT....)",
                     "scan_interval": "Scan intervall in Minuten (default: 60)"
                 }
             }

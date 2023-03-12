@@ -8,7 +8,7 @@ from homeassistant.core import HomeAssistant
 from .coordinator import WienerNetzeUpdateCoordinator
 
 from .const import DOMAIN
-from .const import CONF_ZAEHLERPUNKT, CONF_SCAN_INTERVAL
+from .const import CONF_METER_READER, CONF_SCAN_INTERVAL
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -45,9 +45,9 @@ async def update_listener(hass: HomeAssistant, config_entry: ConfigEntry) -> Non
         new[CONF_SCAN_INTERVAL] = config_entry.options[CONF_SCAN_INTERVAL]
         hass.config_entries.async_update_entry(config_entry, data=new)
 
-    if CONF_ZAEHLERPUNKT in config_entry.options:
+    if CONF_METER_READER in config_entry.options:
         new = {**config_entry.data}
-        new[CONF_ZAEHLERPUNKT] = config_entry.options[CONF_ZAEHLERPUNKT]
+        new[CONF_METER_READER] = config_entry.options[CONF_METER_READER]
         hass.config_entries.async_update_entry(config_entry, data=new)
 
     await hass.config_entries.async_reload(config_entry.entry_id)

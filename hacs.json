@@ -1,7 +1,7 @@
 {
-    "name": "Wiener Netze Smartmeter",
+    "name": "WN Smartmeter",
     "render_readme": true,
     "zip_release": true,
-    "filename": "wnsm.zip",
+    "filename": "wn-smartmeter.zip",
     "country": "AT"
 }

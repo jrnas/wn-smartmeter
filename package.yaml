@@ -4,11 +4,12 @@ author:
     name: jrnas
   description: Wiener Netze Smartmeter
   files:
-    - custom_components/wnsm/__init__.py
-    - custom_components/wnsm/sensor.py
+    - custom_components/wn-smartmeter/__init__.py
+    - custom_components/wn-smartmeter/sensor.py
   keywords:
-    - wnsm
+    - wn-smartmeter
     - wien
+    - wienernetze
     - smartmeter
     - homeassistant
     - home-assistant

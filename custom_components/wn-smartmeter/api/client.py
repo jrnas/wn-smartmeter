@@ -32,13 +32,13 @@ class WienerNetzeAPI:
         hass: HomeAssistant,
         username: str,
         password: str,
-        zaehlerpunkt: str,
+        meter_reader: str,
     ) -> None:
         """Access the Smartmeter API."""
         self.hass = hass
         self.username = username
         self.password = password
-        self.zaehlerpunkt = zaehlerpunkt
+        self.meter_reader = meter_reader
         self.session = None
         self.lastlogin = None
         self._access_token = None
@@ -191,13 +191,13 @@ class WienerNetzeAPI:
     def _dt_string(self, datetime_string):
         return datetime_string.strftime(API_DATE_FORMAT)[:-3] + "Z"
 
-    async def get_zaehlerstand(self):
-        """getting zaehlerstand from the smartmeter api"""
-        _LOGGER.debug("get_zaehlerstand")
+    async def get_meterreader(self):
+        """getting meterreader from the smartmeter api"""
+        _LOGGER.debug("get_meterreader")
         return await self._call_api("zaehlpunkt/meterReadings")
 
     async def get_consumption(self):
-        """getting zaehlpunkt consumptions data from the smartmeter api"""
+        """getting meter reader consumptions data from the smartmeter api"""
         _LOGGER.debug("get_consumption")
         endpoint = "zaehlpunkt/consumptions"
         return await self._call_api(endpoint=endpoint)

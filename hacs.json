@@ -2,6 +2,7 @@
     "name": "WN Smartmeter",
     "render_readme": true,
     "zip_release": true,
-    "filename": "wn-smartmeter.zip",
+    "filename": "wn_smartmeter.zip",
+    "homeassistant": "2022.2.0",
     "country": "AT"
 }

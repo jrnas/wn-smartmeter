@@ -2,9 +2,8 @@
 from __future__ import annotations
 
 from typing import Any
-import voluptuous as vol
 import logging
-from .api import WienerNetzeAPI
+import voluptuous as vol
 
 from homeassistant.core import callback
 from homeassistant.config_entries import (
@@ -16,6 +15,8 @@ from homeassistant.helpers.schema_config_entry_flow import (
     SchemaOptionsFlowHandler,
 )
 from homeassistant.data_entry_flow import FlowResult
+
+from .api import WienerNetzeAPI
 
 from .const import (
     DOMAIN,

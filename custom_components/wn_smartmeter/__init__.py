@@ -1,4 +1,4 @@
-"""WienerNetze Sensor custom integration"""
+"""WienerNetze Sensor custom integration."""
 from __future__ import annotations
 import logging
 

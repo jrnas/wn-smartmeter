@@ -25,3 +25,4 @@ tts
 scenes.yaml
 scripts.yaml
 secrets.yaml
+home-assistant_*

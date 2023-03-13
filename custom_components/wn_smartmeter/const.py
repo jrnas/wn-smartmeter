@@ -10,7 +10,7 @@ PAGE_URL = "https://smartmeter-web.wienernetze.at/"
 API_URL = "https://api.wstw.at/gateway/WN_SMART_METER_PORTAL_API_B2C/1.0/"
 REDIRECT_URI = "https://smartmeter-web.wienernetze.at/"
 API_DATE_FORMAT = "%Y-%m-%dT%H:%M:%S.%f"
-AUTH_URL = "https://log.wien/auth/realms/logwien/protocol/openid-connect/"  # noqa
+AUTH_URL = "https://log.wien/auth/realms/logwien/protocol/openid-connect/"
 
 
 LOGIN_ARGS = {
@@ -26,9 +26,7 @@ API_TIMEOUT = 30
 
 
 def build_access_token_args(**kwargs):
-    """
-    build access token and add kwargs
-    """
+    """Build access token and add kwargs."""
     args = {
         "grant_type": "authorization_code",
         "client_id": "wn-smartmeter",

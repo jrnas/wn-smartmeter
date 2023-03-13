@@ -1,0 +1,13 @@
+{
+    "domain": "wn_smartmeter",
+    "name": "Wiener Netze Smartmeter",
+    "documentation": "https://github.com/jrnas/wn-smartmeter",
+    "dependencies": [],
+    "config_flow": true,
+    "codeowners": [],
+    "requirements": [
+      "lxml"
+    ],
+    "iot_class": "local_polling",
+    "version": "2.0.3"
+  }

@@ -1,0 +1,31 @@
+{
+    "config": {
+        "step": {
+            "user": {
+                "title": "WN Smartmeter",
+                "data": {
+                    "username": "Dein Benutzername von LogWien",
+                    "password": "Dein Passwort von LogWien",
+                    "meter_reader": "Deine Zählerpunktnummer (e.g.: AT....)",
+                    "scan_interval": "Scan intervall in Minuten (default: 60)"
+                }
+            }
+        },
+        "error": {
+            "auth": "Username oder Passwort falsch!"
+        },
+        "abort": {
+            "single_instance_allowed": "Nur eine WienerNetze konfiguration ist erlaubt."
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "meter_reader": "Deine Zählerpunktnummer (e.g.: AT....)",
+                    "scan_interval": "Scan intervall in Minuten (default: 60)"
+                }
+            }
+        }
+    }
+}

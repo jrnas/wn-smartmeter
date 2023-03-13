@@ -1,0 +1,16 @@
+{
+  "options": {
+    "step": {
+      "init": {
+        "data": {
+          "meter_reader": "asd1",
+          "scan_interval": "asd2"
+        },
+        "data_description": {
+          "meter_reader": "dd1",
+          "scan_interval": "asd2"
+        }
+      }
+    }
+  }
+}

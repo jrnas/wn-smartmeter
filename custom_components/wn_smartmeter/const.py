@@ -39,7 +39,7 @@ def build_access_token_args(**kwargs):
 
 
 # config
-DOMAIN = "wn-smartmeter"
+DOMAIN = "wn_smartmeter"
 NAME = "WN Smartmeter"
 DEFAULT_SCAN_INTERVAL: Final = 60
 CONF_USERNAME: Final = "username"

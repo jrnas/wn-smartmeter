@@ -1,5 +1,5 @@
 {
-    "domain": "wn-smartmeter",
+    "domain": "wn_smartmeter",
     "name": "Wiener Netze Smartmeter",
     "documentation": "https://github.com/jrnas/wn-smartmeter",
     "dependencies": [],

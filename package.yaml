@@ -1,11 +1,11 @@
 author:
     email: jrnas@users.noreply.github.com
-    homepage: https://github.com/jrnas/wiener_netze
+    homepage: https://github.com/jrnas/wn-smartmeter
     name: jrnas
   description: Wiener Netze Smartmeter
   files:
-    - custom_components/wn-smartmeter/__init__.py
-    - custom_components/wn-smartmeter/sensor.py
+    - custom_components/wn_smartmeter/__init__.py
+    - custom_components/wn_smartmeter/sensor.py
   keywords:
     - wn-smartmeter
     - wien

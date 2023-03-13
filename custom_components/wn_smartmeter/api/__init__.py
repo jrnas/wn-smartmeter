@@ -4,11 +4,12 @@ try:
 except ModuleNotFoundError:
     from importlib_metadata import version
 
+
+from contextlib import suppress
+
 from .client import WienerNetzeAPI
 
-try:
+with suppress(Exception):
     __version__ = version(__name__)
-except Exception:  # pylint: disable=broad-except
-    pass
 
 __all__ = ["WienerNetzeAPI"]

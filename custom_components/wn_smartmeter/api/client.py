@@ -1,4 +1,4 @@
-"""WienerNetze API that provides data from the SmartMeter API"""
+"""WienerNetze API that provides data from the SmartMeter API."""
 from ..const import (
     AUTH_URL,
     LOGIN_ARGS,
@@ -46,7 +46,7 @@ class WienerNetzeAPI:
         self._api_gateway_token = None
 
     async def _get_login_url(self) -> str:
-        """get login url"""
+        """Get login url."""
         _LOGGER.debug("_get_login_url()")
         login_url = AUTH_URL + "auth?" + parse.urlencode(LOGIN_ARGS)
         _LOGGER.debug(login_url)
@@ -76,7 +76,7 @@ class WienerNetzeAPI:
             return loginurl[0]
 
     async def _set_tokens(self, code: str):
-        """get tokens"""
+        """Get tokens."""
         _LOGGER.debug("_set_tokens()")
         async with self.session.post(
             url=AUTH_URL + "token",
@@ -90,7 +90,7 @@ class WienerNetzeAPI:
             self._api_gateway_token = await self._get_api_key(self._access_token)
 
     async def login(self) -> bool:
-        """login"""
+        """login."""
         _LOGGER.debug("login()")
         self.session = async_create_clientsession(self.hass, verify_ssl=False)
         self.lastlogin = datetime.now()
@@ -140,7 +140,7 @@ class WienerNetzeAPI:
             return True
 
     async def _get_api_key(self, token) -> str:
-        """get api key"""
+        """Get api key."""
         _LOGGER.debug("_get_api_key()")
         headers = {"Authorization": f"Bearer {token}"}
         async with self.session.post(
@@ -168,7 +168,7 @@ class WienerNetzeAPI:
         base_url=None,
         query=None,
     ):
-        """call api"""
+        """Call api."""
         _LOGGER.debug("_call_api()")
         await self.login()
 
@@ -192,12 +192,12 @@ class WienerNetzeAPI:
         return datetime_string.strftime(API_DATE_FORMAT)[:-3] + "Z"
 
     async def get_meterreader(self):
-        """getting meterreader from the smartmeter api"""
+        """Get meter reader from the smartmeter api."""
         _LOGGER.debug("get_meterreader")
         return await self._call_api("zaehlpunkt/meterReadings")
 
     async def get_consumption(self):
-        """getting meter reader consumptions data from the smartmeter api"""
+        """Get meter reader consumptions data from the smartmeter api."""
         _LOGGER.debug("get_consumption")
         endpoint = "zaehlpunkt/consumptions"
         return await self._call_api(endpoint=endpoint)

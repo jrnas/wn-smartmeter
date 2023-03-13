@@ -32,7 +32,7 @@ async def async_setup_entry(
     config: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ):
-    """Setup sensor platform."""
+    """Set up sensor platform."""
     coordinator: WienerNetzeUpdateCoordinator = hass.data[DOMAIN]
     _LOGGER.debug("setup")
     entities = []

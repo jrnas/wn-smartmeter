@@ -31,7 +31,7 @@ for debugging purpose you can enable debug logs in HomeAssistant in the configur
 logger:
   default: warning
   logs:
-    custom_components.wn-smartmeter: debug
+    custom_components.wn_smartmeter: debug
 ```
 
 ## TODOS

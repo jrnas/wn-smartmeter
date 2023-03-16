@@ -1,4 +1,15 @@
 """WienerNetze API that provides data from the SmartMeter API."""
+import logging
+from urllib import parse
+from datetime import timedelta
+from datetime import datetime
+from aiohttp import hdrs
+from lxml import html
+from homeassistant.helpers.aiohttp_client import (
+    async_create_clientsession,
+)
+from homeassistant.core import HomeAssistant
+import aiohttp
 from ..const import (
     AUTH_URL,
     LOGIN_ARGS,
@@ -9,16 +20,6 @@ from ..const import (
     API_TIMEOUT,
     build_access_token_args,
 )
-from urllib import parse
-import logging
-import aiohttp
-from aiohttp import hdrs
-from lxml import html
-from datetime import datetime
-from homeassistant.helpers.aiohttp_client import (
-    async_create_clientsession,
-)
-from homeassistant.core import HomeAssistant
 
 _LOGGER = logging.getLogger(__name__)
 timeout = aiohttp.ClientTimeout(total=API_TIMEOUT)
@@ -32,7 +33,7 @@ class WienerNetzeAPI:
         hass: HomeAssistant,
         username: str,
         password: str,
-        meter_reader: str,
+        meter_reader: str = "",
     ) -> None:
         """Access the Smartmeter API."""
         self.hass = hass
@@ -191,13 +192,29 @@ class WienerNetzeAPI:
     def _dt_string(self, datetime_string):
         return datetime_string.strftime(API_DATE_FORMAT)[:-3] + "Z"
 
-    async def get_meterreader(self):
+    async def get_meter_reader(self):
         """Get meter reader from the smartmeter api."""
-        _LOGGER.debug("get_meterreader")
+        _LOGGER.debug("get_meter_reader")
         return await self._call_api("zaehlpunkt/meterReadings")
 
-    async def get_consumption(self):
-        """Get meter reader consumptions data from the smartmeter api."""
+    async def get_meter_readers(self):
+        """Get a list of meter readers from the smartmeter api."""
+        _LOGGER.debug("get_meter_readers")
+        return await self._call_api("zaehlpunkte")
+
+    async def get_consumption(self, meter_reader: str):
+        """Get verbrauchRaw data from the smartmeter api."""
         _LOGGER.debug("get_consumption")
-        endpoint = "zaehlpunkt/consumptions"
-        return await self._call_api(endpoint=endpoint)
+        endpoint = f"messdaten/zaehlpunkt/{meter_reader}/verbrauchRaw"
+        date_from = datetime.today() - timedelta(days=4)
+        date_to = datetime.today() + timedelta(days=1)
+        query = {
+            "dateFrom": self._dt_string(
+                date_from.replace(hour=23, minute=00, second=0, microsecond=0)
+            ),
+            "dateTo": self._dt_string(
+                date_to.replace(hour=22, minute=59, second=59, microsecond=9)
+            ).replace(".000Z", ".999Z"),
+            "granularity": "DAY",
+        }
+        return await self._call_api(endpoint=endpoint, query=query)

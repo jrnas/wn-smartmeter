@@ -5,7 +5,12 @@
                 "title": "WN Smartmeter",
                 "data": {
                     "username": "Dein Benutzername von LogWien",
-                    "password": "Dein Passwort von LogWien",
+                    "password": "Dein Passwort von LogWien"
+                }
+            },
+            "select_meter_reader": {
+                "title": "WN Smartmeter",
+                "data": {
                     "meter_reader": "Deine Zählerpunktnummer (e.g.: AT....)",
                     "scan_interval": "Scan intervall in Minuten (default: 60)"
                 }

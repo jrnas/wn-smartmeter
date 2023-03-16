@@ -20,7 +20,6 @@ from .api import WienerNetzeAPI
 
 from .const import (
     DOMAIN,
-    NAME,
     CONF_USERNAME,
     CONF_PASSWORD,
     CONF_METER_READER,
@@ -35,6 +34,7 @@ class WienerNetzeFlowHandler(ConfigFlow, domain=DOMAIN):
     """Config flow for WienerNetze."""
 
     VERSION = 1
+    _previous_input: dict[str, Any]
 
     async def async_step_user(
         self, user_input: dict[str, Any] | None = None
@@ -43,19 +43,16 @@ class WienerNetzeFlowHandler(ConfigFlow, domain=DOMAIN):
         _LOGGER.debug("Step user")
         errors = {}
 
-        if self._async_current_entries():
-            return self.async_abort(reason="single_instance_allowed")
-
         if user_input is not None:
-            valid = await self._test_credentials(
-                user_input[CONF_USERNAME],
-                user_input[CONF_PASSWORD],
-                user_input[CONF_METER_READER],
+            api = WienerNetzeAPI(
+                self.hass, user_input[CONF_USERNAME], user_input[CONF_PASSWORD]
             )
+            valid = await self._test_credentials(api)
             _LOGGER.debug("Testing of credentials returned: ")
-            _LOGGER.debug(valid)
+            _LOGGER.debug("logged in: %s", valid)
             if valid:
-                return self.async_create_entry(title=NAME, data=user_input)
+                self._previous_input = user_input
+                return await self.async_step_select_meter_reader(user_input=user_input)
 
             errors["base"] = "auth"
 
@@ -71,24 +68,65 @@ class WienerNetzeFlowHandler(ConfigFlow, domain=DOMAIN):
                         CONF_PASSWORD,
                         default="",
                     ): str,
+                }
+            ),
+            errors=errors,
+        )
+
+    async def async_step_select_meter_reader(
+        self, user_input: dict[str, Any] | None = None
+    ) -> FlowResult:
+        """Handle a flow initialized by the user."""
+        _LOGGER.debug("Step select meter reader")
+        errors = {}
+
+        if CONF_METER_READER in user_input:
+            user_input.update(self._previous_input)
+            return self.async_create_entry(
+                title=user_input[CONF_METER_READER], data=user_input
+            )
+        else:
+            api = WienerNetzeAPI(
+                self.hass, user_input[CONF_USERNAME], user_input[CONF_PASSWORD]
+            )
+            response = await self._get_meter_readers(api)
+            _LOGGER.debug(response)
+            meter_readers = response[0]
+            if "zaehlpunkte" not in meter_readers:
+                _LOGGER.error("no meter readers found.")
+
+        return self.async_show_form(
+            step_id="select_meter_reader",
+            data_schema=vol.Schema(
+                {
                     vol.Required(
                         CONF_METER_READER,
                         default="",
-                    ): str,
+                    ): vol.In(
+                        {
+                            meter_reader["zaehlpunktnummer"]
+                            for meter_reader in meter_readers["zaehlpunkte"]
+                        }
+                    ),
                     vol.Required(
                         CONF_SCAN_INTERVAL, default=DEFAULT_SCAN_INTERVAL
                     ): int,
                 }
             ),
             errors=errors,
+            last_step=True,
         )
 
-    async def _test_credentials(self, username, password, meter_reader):
+    async def _test_credentials(self, api: WienerNetzeAPI):
         """Return true if credentials is valid."""
         _LOGGER.debug("Testing credentials")
 
-        wienernetze_api = WienerNetzeAPI(self.hass, username, password, meter_reader)
-        return await wienernetze_api.login()
+        return await api.login()
+
+    async def _get_meter_readers(self, api: WienerNetzeAPI):
+        """Return a list of meter readers."""
+        _LOGGER.debug("Get meter readers")
+        return await api.get_meter_readers()
 
     @staticmethod
     @callback

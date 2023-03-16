@@ -4,6 +4,9 @@
   "codeowners": [
     "@jrnas"
   ],
+  "requirements": [
+    "lxml"
+  ],
   "config_flow": true,
   "documentation": "https://github.com/jrnas/wn-smartmeter",
   "iot_class": "cloud_polling",

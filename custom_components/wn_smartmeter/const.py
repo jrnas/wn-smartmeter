@@ -44,6 +44,7 @@ DEFAULT_SCAN_INTERVAL: Final = 60
 CONF_USERNAME: Final = "username"
 CONF_PASSWORD: Final = "password"
 CONF_METER_READER: Final = "meter_reader"
+CONF_CUSTOMER_ID: Final = "customer_id"
 CONF_SCAN_INTERVAL: Final = "scan_interval"
 
 ATTR_METER_READER: Final = "MeterReader"

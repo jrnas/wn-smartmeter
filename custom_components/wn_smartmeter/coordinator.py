@@ -17,6 +17,7 @@ from .const import (
     CONF_USERNAME,
     CONF_PASSWORD,
     CONF_METER_READER,
+    CONF_CUSTOMER_ID,
     CONF_SCAN_INTERVAL,
     ATTR_METER_READER,
     ATTR_CONSUMPTION_YESTERDAY,
@@ -45,6 +46,7 @@ class WienerNetzeUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         )
         _LOGGER.debug("setup")
         _LOGGER.debug("meter_reader: %s", self.config_entry.data[CONF_METER_READER])
+        _LOGGER.debug("customer_id: %s", self.config_entry.data[CONF_CUSTOMER_ID])
         _LOGGER.debug("scan_interval: %s", self.config_entry.data[CONF_SCAN_INTERVAL])
         self.wienernetze_api = WienerNetzeAPI(
             hass,
@@ -64,7 +66,7 @@ class WienerNetzeUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
     async def _update_consumption(self, data):
         _LOGGER.debug("_update_consumption()")
         response = await self.wienernetze_api.get_consumption(
-            self.config_entry.data[CONF_METER_READER]
+            self.config_entry.data[CONF_METER_READER], self.config_entry.data[CONF_CUSTOMER_ID]
         )
         _LOGGER.debug(response)
         if response is not None and hasattr(response, "get"):

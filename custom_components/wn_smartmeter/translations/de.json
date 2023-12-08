@@ -12,7 +12,8 @@
                 "title": "WN Smartmeter",
                 "data": {
                     "meter_reader": "Deine Zählerpunktnummer (e.g.: AT....)",
-                    "scan_interval": "Scan intervall in Minuten (default: 60)"
+                    "scan_interval": "Scan intervall in Minuten (default: 60)",
+                    "customer_id": "Kundennummer (nicht bearbeiten)"
                 }
             }
         },
@@ -28,7 +29,8 @@
             "init": {
                 "data": {
                     "meter_reader": "Deine Zählerpunktnummer (e.g.: AT....)",
-                    "scan_interval": "Scan intervall in Minuten (default: 60)"
+                    "scan_interval": "Scan intervall in Minuten (default: 60)",
+                    "customer_id": "Kundennummer (nicht bearbeiten)"
                 }
             }
         }

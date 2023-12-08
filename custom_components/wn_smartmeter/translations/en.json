@@ -12,7 +12,8 @@
                 "title": "WN Smartmeter",
                 "data": {
                     "meter_reader": "Your MeterReader number (e.g.: AT....)",
-                    "scan_interval": "Scan interval in minutes (default: 60)"
+                    "scan_interval": "Scan interval in minutes (default: 60)",
+                    "customer_id": "Customer number (do not edit)"
                 }
             }
         },
@@ -28,7 +29,8 @@
             "init": {
                 "data": {
                     "meter_reader": "Your MeterReader number (e.g.: AT....)",
-                    "scan_interval": "Scan interval in minutes (default: 60)"
+                    "scan_interval": "Scan interval in minutes (default: 60)",
+                    "customer_id": "Customer number (do not edit)"
                 }
             }
         }

@@ -23,6 +23,7 @@ from .const import (
     CONF_USERNAME,
     CONF_PASSWORD,
     CONF_METER_READER,
+    CONF_CUSTOMER_ID,
     CONF_SCAN_INTERVAL,
     DEFAULT_SCAN_INTERVAL,
 )
@@ -92,6 +93,8 @@ class WienerNetzeFlowHandler(ConfigFlow, domain=DOMAIN):
             response = await self._get_meter_readers(api)
             _LOGGER.debug(response)
             meter_readers = response[0]
+            customerId = response[0]["geschaeftspartner"]
+            _LOGGER.debug(customerId)
             if "zaehlpunkte" not in meter_readers:
                 _LOGGER.error("no meter readers found.")
 
@@ -111,6 +114,9 @@ class WienerNetzeFlowHandler(ConfigFlow, domain=DOMAIN):
                     vol.Required(
                         CONF_SCAN_INTERVAL, default=DEFAULT_SCAN_INTERVAL
                     ): int,
+                    vol.Required(
+                        CONF_CUSTOMER_ID, default=customerId
+                    ): str,
                 }
             ),
             errors=errors,

@@ -63,38 +63,26 @@ class WienerNetzeUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         _LOGGER.debug(response)
         data[ATTR_METER_READER] = response["meterReadings"][0]["value"] / 1000
 
-    async def _update_consumption(self, data):
-        _LOGGER.debug("_update_consumption()")
-        response = await self.wienernetze_api.get_consumption(
-            self.config_entry.data[CONF_METER_READER], self.config_entry.data[CONF_CUSTOMER_ID]
-        )
+    async def _update_consumptions(self, data):
+        _LOGGER.debug("_update_consumptions()")
+        response = await self.wienernetze_api.get_consumptions()
         _LOGGER.debug(response)
         if response is not None and hasattr(response, "get"):
-            values = response.get("values")
-            if values:
-                for value in values:
-                    if value is not None:
-                        val = value.get("value") / 1000
-                        timestamp = value.get("timestamp")
-
-                        if val and timestamp:
-                            t_z = pytz.timezone(TIMEZONE)
-                            now = datetime.now(tz=t_z)
-                            yesterday = now - timedelta(days=1)
-                            day_before_yesterday = now - timedelta(days=2)
-
-                            timestamp = parse(timestamp) + timedelta(days=1)
-                            if timestamp.date() == yesterday.date():
-                                data[ATTR_CONSUMPTION_YESTERDAY] = val
-                            if timestamp.date() == day_before_yesterday.date():
-                                data[ATTR_CONSUMPTION_DAY_BEFORE_YESTERDAY] = val
+            if response.get("consumptionYesterday") is not None:
+                consumptionYesterday = response.get("consumptionYesterday")["value"]
+                if consumptionYesterday is not None:
+                    data[ATTR_CONSUMPTION_YESTERDAY] = consumptionYesterday / 1000
+            if response.get("consumptionDayBeforeYesterday") is not None:
+                consumptionDayBeforeYesterday = response.get("consumptionDayBeforeYesterday")["value"]
+                if consumptionDayBeforeYesterday is not None:
+                    data[ATTR_CONSUMPTION_DAY_BEFORE_YESTERDAY] = consumptionDayBeforeYesterday / 1000
 
     async def _async_update_data(self) -> dict[str, Any]:
         """Fetch data."""
         data: dict[str, Any] = {}
 
         await self._update_meterreader(data)
-        await self._update_consumption(data)
+        await self._update_consumptions(data)
 
         _LOGGER.debug(data)
         return data

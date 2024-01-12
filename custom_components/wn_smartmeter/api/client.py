@@ -205,16 +205,21 @@ class WienerNetzeAPI:
     async def get_consumption(self, meter_reader: str, customer_id: str):
         """Get verbrauchRaw data from the smartmeter api."""
         _LOGGER.debug("get_consumption")
-        endpoint = f"messdaten/zaehlpunkt/{customer_id}/{meter_reader}/verbrauch"
+        endpoint = f"messdaten/{customer_id}/{meter_reader}/verbrauch"
         date_from = datetime.today() - timedelta(days=4)
-        date_to = datetime.today() + timedelta(days=1)
+        date_to = datetime.now()
         query = {
             "dateFrom": self._dt_string(
                 date_from.replace(hour=23, minute=00, second=0, microsecond=0)
             ),
-            "dateTo": self._dt_string(
-                date_to.replace(hour=22, minute=59, second=59, microsecond=9)
-            ).replace(".000Z", ".999Z"),
+            "dateTo": self._dt_string(date_to),
             "granularity": "DAY",
+            "dayViewResolution": "HOUR"
         }
         return await self._call_api(endpoint=endpoint, query=query)
+
+    async def get_consumptions(self):
+        """Get consumptions data from the smartmeter api."""
+        _LOGGER.debug("get_consumptions")
+        endpoint = "zaehlpunkt/consumptions"
+        return await self._call_api(endpoint=endpoint)

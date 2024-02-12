@@ -1,5 +1,5 @@
 colorlog==6.8.2
-homeassistant==2024.2.0
+homeassistant==2024.2.1
 pip>=21.0
 ruff==0.2.1
 voluptuous==0.14.2

@@ -57,14 +57,23 @@ class WienerNetzeUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
 
         self.entities: list[Entity] = []
 
+    async def _set_default_meterreader(self):
+        _LOGGER.debug("_set_default_meterreader()")
+        await self.wienernetze_api.set_default_meterreader(self.config_entry.data[CONF_METER_READER], self.config_entry.data[CONF_CUSTOMER_ID])
+
+    async def _login(self):
+        await self.wienernetze_api.login()
+
     async def _update_meterreader(self, data):
         _LOGGER.debug("_update_meterreader()")
+        await self._set_default_meterreader()
         response = await self.wienernetze_api.get_meter_reader()
         _LOGGER.debug(response)
         data[ATTR_METER_READER] = response["meterReadings"][0]["value"] / 1000
 
     async def _update_consumptions(self, data):
         _LOGGER.debug("_update_consumptions()")
+        await self._set_default_meterreader()
         response = await self.wienernetze_api.get_consumptions()
         _LOGGER.debug(response)
         if response is not None and hasattr(response, "get"):
@@ -80,7 +89,7 @@ class WienerNetzeUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
     async def _async_update_data(self) -> dict[str, Any]:
         """Fetch data."""
         data: dict[str, Any] = {}
-
+        await self._login()
         await self._update_meterreader(data)
         await self._update_consumptions(data)
 

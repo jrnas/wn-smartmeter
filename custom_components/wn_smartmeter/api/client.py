@@ -48,23 +48,11 @@ class WienerNetzeAPI:
 
     async def _get_login_url(self) -> str:
         """Get login url."""
-        _LOGGER.debug("_get_login_url()")
         login_url = AUTH_URL + "auth?" + parse.urlencode(LOGIN_ARGS)
-        _LOGGER.debug(login_url)
-        _LOGGER.debug("request cookies:")
-        for cookie in self.session.cookie_jar:
-            _LOGGER.debug("%s=%s", cookie.key, cookie["domain"])
 
         async with self.session.get(url=login_url, timeout=timeout) as resp:
             status_code = int(resp.status)
-            headers = resp.headers
             body = await resp.text()
-            _LOGGER.debug("response status: %s", resp.status)
-            _LOGGER.debug("response headers:")
-            _LOGGER.debug(headers)
-            _LOGGER.debug("response cookies:")
-            for cookie in self.session.cookie_jar:
-                _LOGGER.debug("%s=%s", cookie.key, cookie["domain"])
 
             if status_code != 200:
                 raise ConnectionError(
@@ -78,7 +66,6 @@ class WienerNetzeAPI:
 
     async def _set_tokens(self, code: str):
         """Get tokens."""
-        _LOGGER.debug("_set_tokens()")
         async with self.session.post(
             url=AUTH_URL + "token",
             data=build_access_token_args(code=code),
@@ -98,11 +85,6 @@ class WienerNetzeAPI:
         login_url = await self._get_login_url()
 
         if login_url is not None:
-            _LOGGER.debug("login_url: %s", login_url)
-            _LOGGER.debug("request cookies:")
-            for cookie in self.session.cookie_jar:
-                _LOGGER.debug("%s=%s", cookie.key, cookie["domain"])
-
             data = {
                 "username": self.username,
                 "password": self.password,
@@ -111,12 +93,6 @@ class WienerNetzeAPI:
                 url=login_url, data=data, allow_redirects=False, timeout=timeout
             ) as resp:
                 headers = resp.headers
-                _LOGGER.debug("response status: %s", resp.status)
-                _LOGGER.debug("response headers:")
-                _LOGGER.debug(headers)
-                _LOGGER.debug("response cookies:")
-                for cookie in self.session.cookie_jar:
-                    _LOGGER.debug("%s=%s", cookie.key, cookie["domain"])
 
             if "Location" not in headers:
                 return False
@@ -142,7 +118,6 @@ class WienerNetzeAPI:
 
     async def _get_api_key(self, token) -> str:
         """Get api key."""
-        _LOGGER.debug("_get_api_key()")
         headers = {"Authorization": f"Bearer {token}"}
         async with self.session.post(
             url=PAGE_URL, headers=headers, allow_redirects=False, timeout=timeout
@@ -160,7 +135,6 @@ class WienerNetzeAPI:
                     "Could not obtain API key from scripts"
                 ) from Exception
             for match in API_GATEWAY_TOKEN_REGEX.findall(body):
-                _LOGGER.debug("found api key: %s", match)
                 return match
 
     async def _call_api(
@@ -168,26 +142,25 @@ class WienerNetzeAPI:
         endpoint,
         base_url=None,
         query=None,
+        method="GET",
+        data=None,
+        timeout=60.0
     ):
         """Call api."""
-        _LOGGER.debug("_call_api()")
-        await self.login()
-
         if base_url is None:
             base_url = API_URL
         url = f"{base_url}{endpoint}"
-
         if query:
             url += ("?" if "?" not in endpoint else "&") + parse.urlencode(query)
         _LOGGER.debug(url)
+
         headers = {
             "Authorization": f"Bearer {self._access_token}",
             "X-Gateway-APIKey": self._api_gateway_token,
         }
 
-        async with self.session.get(url, headers=headers) as resp:
-            json = await resp.json()
-            return json
+        async with self.session.request(method, url, headers=headers, json=data, timeout=timeout) as resp:
+            return await resp.json()
 
     def _dt_string(self, datetime_string):
         return datetime_string.strftime(API_DATE_FORMAT)[:-3] + "Z"
@@ -223,3 +196,12 @@ class WienerNetzeAPI:
         _LOGGER.debug("get_consumptions")
         endpoint = "zaehlpunkt/consumptions"
         return await self._call_api(endpoint=endpoint)
+
+    async def set_default_meterreader(self, meter_reader: str, customer_id: str):
+        """Set default meterreader."""
+        _LOGGER.debug("set_default_meterreader")
+        endpoint = f"kundennummer/{customer_id}/zaehlpunkt/default"
+        data = {
+            "zaehlpunktNummer": meter_reader
+        }
+        return await self._call_api(endpoint=endpoint, data=data, method="PUT")

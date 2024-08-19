@@ -8,6 +8,7 @@ API_GATEWAY_TOKEN_REGEX = re.compile(
 
 PAGE_URL = "https://smartmeter-web.wienernetze.at/"
 API_URL = "https://api.wstw.at/gateway/WN_SMART_METER_PORTAL_API_B2C/1.0/"
+API_CONFIG_URL = "https://smartmeter-web.wienernetze.at/assets/app-config.json"
 REDIRECT_URI = "https://smartmeter-web.wienernetze.at/"
 API_DATE_FORMAT = "%Y-%m-%dT%H:%M:%S.%f"
 AUTH_URL = "https://log.wien/auth/realms/logwien/protocol/openid-connect/"

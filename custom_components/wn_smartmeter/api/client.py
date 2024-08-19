@@ -13,11 +13,10 @@ import aiohttp
 from ..const import (
     AUTH_URL,
     LOGIN_ARGS,
-    PAGE_URL,
-    API_GATEWAY_TOKEN_REGEX,
     API_DATE_FORMAT,
     API_URL,
     API_TIMEOUT,
+    API_CONFIG_URL,
     build_access_token_args,
 )
 
@@ -119,23 +118,12 @@ class WienerNetzeAPI:
     async def _get_api_key(self, token) -> str:
         """Get api key."""
         headers = {"Authorization": f"Bearer {token}"}
-        async with self.session.post(
-            url=PAGE_URL, headers=headers, allow_redirects=False, timeout=timeout
+        async with self.session.get(
+            url=API_CONFIG_URL, headers=headers
         ) as resp:
-            body = await resp.text()
+            body = await resp.json()
 
-        tree = html.fromstring(body)
-        scripts = tree.xpath("(//script/@src)")
-        for script in scripts:
-            try:
-                async with self.session.get(url=PAGE_URL + script) as resp:
-                    body = await resp.text()
-            except Exception:
-                raise ConnectionError(
-                    "Could not obtain API key from scripts"
-                ) from Exception
-            for match in API_GATEWAY_TOKEN_REGEX.findall(body):
-                return match
+        return body["b2cApiKey"]
 
     async def _call_api(
         self,
